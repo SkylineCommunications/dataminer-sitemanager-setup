@@ -148,7 +148,7 @@ function Uninstall-ZrokAgent {
 function Show-Help {
     Write-Host @"
 Usage:
-    .\setup.ps1 -Command <install|uninstall|help> [-ZrokOrganizationToken <token>] [-ZrokEnvironmentDescription <description>]
+    .\Setup-DataMinerSiteManager.ps1 -Command <install|uninstall|help> [-ZrokOrganizationToken <token>] [-ZrokEnvironmentDescription <description>]
 
 Commands:
     install     Installs the zrok-agent as a Windows service.
@@ -159,8 +159,8 @@ Commands:
     help        Shows this help message.
 
 Examples:
-    .\setup.ps1 -Command install -ZrokOrganizationToken 3G67gmYPhaww -ZrokEnvironmentDescription "Skyline HQ"
-    .\setup.ps1 -Command uninstall
+    .\Setup-DataMinerSiteManager.ps1 -Command install -ZrokOrganizationToken 3G67gmYPhaww -ZrokEnvironmentDescription "Skyline HQ"
+    .\Setup-DataMinerSiteManager.ps1 -Command uninstall
 "@
 }
 
