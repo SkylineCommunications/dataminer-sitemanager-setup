@@ -93,7 +93,7 @@ function Install-ZrokAgent {
         Copy-Item -Path $_.FullName -Destination $script:BinariesDirectory -Force
     }
 
-    Write-Host "Deleting the downloaded files.."
+    Write-Host "Deleting the downloaded files..."
     Remove-Item -Path $DownloadDirectory -Recurse -Force
 
     if (-not ($script:MachinePath -contains $script:BinariesDirectory)) {
