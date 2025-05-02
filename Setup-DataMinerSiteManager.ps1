@@ -102,6 +102,7 @@ function Install-ZrokAgent {
         $env:Path = $NewMachinePath
     }
 
+    zrok.exe config set apiEndpoint https://api.zrok.dataminer.services
     zrok.exe enable $ZrokOrganizationToken --description $ZrokEnvironmentDescription
 
     Write-Host "Installing the zrok-agent service..."
