@@ -42,6 +42,13 @@ function Assert-ZrokOrganizationTokenRequirement {
     }
 }
 
+function Assert-ZrokEnvironmentDescriptionRequirement {
+    if(-not $ZrokEnvironmentDescription) {
+        Write-Host "A zrok environment description needs to be passed in order to complete the installation."
+        Exit
+    }
+}
+
 function Test-ZrokAgentServiceExists {
     return [bool](Get-Service -Name $SERVICE_NAME -ErrorAction SilentlyContinue)
 }
@@ -50,15 +57,11 @@ function Install-ZrokAgent {
     Assert-WindowsVersionRequirement
     Assert-AdministratorRoleRequirement
     Assert-ZrokOrganizationTokenRequirement
+    Assert-ZrokEnvironmentDescriptionRequirement
 
     if(Test-ZrokAgentServiceExists) {
         Write-Host "Service already installed."
         Exit
-    }
-
-    if(-not $ZrokEnvironmentDescription) {
-        Write-Host "No zrok environment description passed, using hostname instead."
-        $ZrokEnvironmentDescription = hostname
     }
 
     $ZROK_VERSION = "1.0.2"
@@ -149,13 +152,11 @@ function Uninstall-ZrokAgent {
 function Show-Help {
     Write-Host @"
 Usage:
-    .\Setup-DataMinerSiteManager.ps1 -Command <install|uninstall|help> [-ZrokOrganizationToken <token>] [-ZrokEnvironmentDescription <description>]
+    .\Setup-DataMinerSiteManager.ps1 -Command <install|uninstall|help> -ZrokOrganizationToken <token> -ZrokEnvironmentDescription <description>
 
 Commands:
     install     Installs the zrok-agent as a Windows service.
-                Requires -ZrokOrganizationToken.
-                Optionally, you can specify -ZrokEnvironmentDescription to describe the site name.
-                If not specified, the machine's hostname will be used.
+                Requires -ZrokOrganizationToken and -ZrokEnvironmentDescription.
     uninstall   Uninstalls the zrok-agent service and cleans up.
     help        Shows this help message.
 
