@@ -64,7 +64,7 @@ function Install-ZrokAgent {
         Exit
     }
 
-    $ZROK_VERSION = "1.0.2"
+    $ZROK_VERSION = "1.0.6"
     $NSSM_VERSION = "2.24"
     $MODULE_NAME = "DataMiner SiteManager"
 
