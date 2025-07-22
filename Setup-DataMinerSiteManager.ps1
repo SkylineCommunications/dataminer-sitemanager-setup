@@ -92,7 +92,7 @@ function Install-ZrokAgent {
 
     New-Item -ItemType Directory -Path $script:BinariesDirectory -Force | Out-Null
 
-    Get-ChildItem -Path $DownloadDirectory -Recurse -Filter *.exe | ForEach-Object {
+    Get-ChildItem -Path $DownloadDirectory -Recurse -Include *.exe, LICENSE | ForEach-Object {
         Copy-Item -Path $_.FullName -Destination $script:BinariesDirectory -Force
     }
 
