@@ -7,7 +7,7 @@ param(
 $SERVICE_NAME = "zrok-agent"
 
 function Initialize-ScriptContext {
-    $script:BinariesDirectory = [System.IO.Path]::Combine($env:ProgramFiles, "Skyline Communications", "DataMiner SiteManager")
+    $script:BinariesDirectory = [System.IO.Path]::Combine($env:ProgramFiles, "Skyline Communications", "DataMiner SiteManager", "zrok")
     $script:SystemProfilePath = Join-Path $env:SystemRoot "System32\config\systemprofile"
     $script:MachinePath = [Environment]::GetEnvironmentVariable("Path", "Machine") -split ";" | Where-Object { $_.Trim() -ne "" }
     $env:USERPROFILE = $SystemProfilePath
