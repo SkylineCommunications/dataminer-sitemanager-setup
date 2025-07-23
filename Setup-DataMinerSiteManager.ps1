@@ -7,7 +7,7 @@ param(
 $SERVICE_NAME = "zrok-agent"
 
 function Initialize-ScriptContext {
-    $script:BinariesDirectory = [System.IO.Path]::Combine($env:ProgramFiles, "Skyline Communications", "DataMiner SiteManager", "zrok")
+    $script:BinariesDirectory = [System.IO.Path]::Combine($env:ProgramW6432, "Skyline Communications", "DataMiner SiteManager", "zrok")
     $script:SystemProfilePath = Join-Path $env:SystemRoot "System32\config\systemprofile"
     $script:MachinePath = [Environment]::GetEnvironmentVariable("Path", "Machine") -split ";" | Where-Object { $_.Trim() -ne "" }
     $env:USERPROFILE = $SystemProfilePath
@@ -138,7 +138,12 @@ function Uninstall-ZrokAgent {
     sc.exe delete zrok-agent
 
     Write-Host "Cleaning up the zrok profile..."
-    $ZrokConfigPath = [System.IO.Path]::Combine($script:SystemProfilePath, ".zrok")
+    $System32Path = if (-not [Environment]::Is64BitProcess) {
+        Join-Path $env:SystemRoot "sysnative"
+    } else {
+        Join-Path $env:SystemRoot "System32"
+    }
+    $ZrokConfigPath = Join-Path $System32Path "\config\systemprofile\.zrok"
     Remove-Item -Path $ZrokConfigPath -Recurse -Force
 
     Write-Host "Restoring PATH environment variables..."
