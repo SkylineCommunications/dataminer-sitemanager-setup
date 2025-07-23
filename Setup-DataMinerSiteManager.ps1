@@ -152,6 +152,10 @@ function Uninstall-ZrokAgent {
 
     Write-Host "Cleaning up the binaries folder..."
     Remove-Item -Path $script:BinariesDirectory -Recurse -Force
+    $SiteManagerDirectory = Split-Path $script:BinariesDirectory -Parent
+    if (-not (Get-ChildItem $SiteManagerDirectory)) {
+        Remove-Item -Path $SiteManagerDirectory -Force
+    }
 }
 
 function Show-Help {
