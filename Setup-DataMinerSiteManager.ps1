@@ -1,6 +1,6 @@
 param(
     [string]$Command = "help",
-    [string]$ZrokOrganizationToken,
+    [string]$ZrokAccountToken,
     [string]$ZrokEnvironmentDescription
 )
 
@@ -35,9 +35,9 @@ function Assert-AdministratorRoleRequirement {
     }
 }
 
-function Assert-ZrokOrganizationTokenRequirement {
-    if(-not $ZrokOrganizationToken) {
-        Write-Host "A zrok organization token needs to be passed in order to complete the installation."
+function Assert-ZrokAccountTokenRequirement {
+    if(-not $ZrokAccountToken) {
+        Write-Host "A zrok account token needs to be passed in order to complete the installation."
         Exit
     }
 }
@@ -56,7 +56,7 @@ function Test-ZrokAgentServiceExists {
 function Install-ZrokAgent {
     Assert-WindowsVersionRequirement
     Assert-AdministratorRoleRequirement
-    Assert-ZrokOrganizationTokenRequirement
+    Assert-ZrokAccountTokenRequirement
     Assert-ZrokEnvironmentDescriptionRequirement
 
     if(Test-ZrokAgentServiceExists) {
@@ -106,7 +106,7 @@ function Install-ZrokAgent {
     }
 
     zrok.exe config set apiEndpoint https://api.zrok.dataminer.services
-    zrok.exe enable $ZrokOrganizationToken --description $ZrokEnvironmentDescription
+    zrok.exe enable $ZrokAccountToken --description $ZrokEnvironmentDescription
 
     Write-Host "Installing the zrok-agent service..."
 
@@ -161,16 +161,16 @@ function Uninstall-ZrokAgent {
 function Show-Help {
     Write-Host @"
 Usage:
-    .\Setup-DataMinerSiteManager.ps1 -Command <install|uninstall|help> -ZrokOrganizationToken <token> -ZrokEnvironmentDescription <description>
+    .\Setup-DataMinerSiteManager.ps1 -Command <install|uninstall|help> -ZrokAccountToken <token> -ZrokEnvironmentDescription <description>
 
 Commands:
     install     Installs the zrok-agent as a Windows service.
-                Requires -ZrokOrganizationToken and -ZrokEnvironmentDescription.
+                Requires -ZrokAccountToken and -ZrokEnvironmentDescription.
     uninstall   Uninstalls the zrok-agent service and cleans up.
     help        Shows this help message.
 
 Examples:
-    .\Setup-DataMinerSiteManager.ps1 -Command install -ZrokOrganizationToken 3G67gmYPhaww -ZrokEnvironmentDescription "Skyline HQ"
+    .\Setup-DataMinerSiteManager.ps1 -Command install -ZrokAccountToken 3G67gmYPhaww -ZrokEnvironmentDescription "Skyline HQ"
     .\Setup-DataMinerSiteManager.ps1 -Command uninstall
 "@
 }
