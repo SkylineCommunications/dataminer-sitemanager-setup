@@ -4,6 +4,10 @@ param(
     [string]$ZrokEnvironmentDescription
 )
 
+if ($ZrokEnvironmentDescription) {
+    $ZrokEnvironmentDescription = $ZrokEnvironmentDescription.Trim()
+}
+
 $SERVICE_NAME = "zrok-agent"
 
 function Initialize-ScriptContext {
