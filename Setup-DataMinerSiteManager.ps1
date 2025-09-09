@@ -53,6 +53,15 @@ function Assert-ZrokEnvironmentDescriptionRequirement {
     }
 }
 
+function Assert-NoPlaceholderValues {
+    if ($ZrokAccountToken -eq "<token>" -or $ZrokEnvironmentDescription -eq "<description>") {
+        Write-Host "You must replace the placeholder values <token> and <description> with your actual zrok account token and environment description."
+        Write-Host "Example:"
+        Write-Host "    .\Setup-DataMinerSiteManager.ps1 -Command install -ZrokAccountToken 3Yz8gmEPHuvw -ZrokEnvironmentDescription 'Skyline HQ'"
+        Exit
+    }
+}
+
 function Test-ZrokAgentServiceExists {
     return [bool](Get-Service -Name $SERVICE_NAME -ErrorAction SilentlyContinue)
 }
@@ -62,6 +71,7 @@ function Install-ZrokAgent {
     Assert-AdministratorRoleRequirement
     Assert-ZrokAccountTokenRequirement
     Assert-ZrokEnvironmentDescriptionRequirement
+    Assert-NoPlaceholderValues
 
     if(Test-ZrokAgentServiceExists) {
         Write-Host "Service already installed."
