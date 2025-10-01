@@ -1,7 +1,7 @@
 #!/bin/bash
 
 SERVICE_NAME="zrok-agent"
-ZROK_VERSION="1.0.7"
+ZROK_VERSION="1.1.5"
 MODULE_NAME="DataMiner SiteManager"
 BINARIES_DIR="/opt/skyline/dataminer-sitemanager/zrok"
 SYSTEMD_SERVICE_FILE="/etc/systemd/system/${SERVICE_NAME}.service"
