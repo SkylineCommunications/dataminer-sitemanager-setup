@@ -25,7 +25,7 @@ function Assert-WindowsVersionRequirement {
     $Version = [System.Version]$OperatingSystem.Version
 
     if ($Version -lt $MinimumSupportedVersion) {
-        Write-Host "Unsupported OS version: $Version. Requires Windows 10 / Windows Server 2019 or later."
+        Write-Host "Unsupported OS version: $Version. Requires Windows 10 / Windows Server 2019 build 17134 or later."
         Exit
     }
 }
