@@ -125,7 +125,7 @@ Examples:
 EOF
 }
 
-COMMAND="$1"
+COMMAND="${1:-}"
 case "$COMMAND" in
     install)
         if [[ $# -ne 3 ]]; then
