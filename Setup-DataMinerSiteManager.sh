@@ -15,6 +15,7 @@ assert_sudo() {
         exit 1
     fi
 }
+
 assert_no_placeholder_values() {
     if [[ "$1" == "<AccountToken>" || "$2" == "<SiteName>" ]]; then
         echo "You must replace the placeholder values <AccountToken> and <SiteName> with your actual account token and site name."
