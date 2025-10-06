@@ -26,7 +26,7 @@ Commands:
 Examples:
     .\Setup-DataMinerSiteManager.ps1 -Command install -AccountToken 3G67gmYPhaww -SiteName "Skyline HQ"
     .\Setup-DataMinerSiteManager.ps1 -Command uninstall
-</pre>;
+</pre>
 
 ## Linux
 
