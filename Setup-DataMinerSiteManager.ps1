@@ -74,7 +74,7 @@ function Install-ZrokAgent {
     Assert-NoPlaceholderValues
 
     if(Test-ZrokAgentServiceExists) {
-        Write-Host "Service already installed."
+        Write-Host "Service ${SERVICE_NAME} is already installed."
         Exit
     }
 
@@ -122,20 +122,23 @@ function Install-ZrokAgent {
     zrok.exe config set apiEndpoint https://api.zrok.dataminer.services
     zrok.exe enable $AccountToken --description $SiteName
 
-    Write-Host "Installing the zrok-agent service..."
+    Write-Host "Installing the ${SERVICE_NAME} service..."
 
-    nssm.exe install zrok-agent "${script:BinariesDirectory}\zrok.exe" agent start
-    nssm.exe set zrok-agent AppDirectory $script:SystemProfilePath
-    nssm.exe set zrok-agent AppStdout "${script:SystemProfilePath}\.zrok\agent-stdout.log"
-    nssm.exe set zrok-agent AppStderr "${script:SystemProfilePath}\.zrok\agent-stderr.log"
-    nssm.exe set zrok-agent Start SERVICE_DELAYED_AUTO_START
-    nssm.exe start zrok-agent
+    nssm.exe install ${SERVICE_NAME} "${script:BinariesDirectory}\zrok.exe" agent start
+    nssm.exe set ${SERVICE_NAME} AppDirectory $script:SystemProfilePath
+    nssm.exe set ${SERVICE_NAME} AppStdout "${script:SystemProfilePath}\.zrok\agent-stdout.log"
+    nssm.exe set ${SERVICE_NAME} AppStderr "${script:SystemProfilePath}\.zrok\agent-stderr.log"
+    nssm.exe set ${SERVICE_NAME} Start SERVICE_DELAYED_AUTO_START
+    nssm.exe start ${SERVICE_NAME}
+
+    Write-Host "The ${SERVICE_NAME} service is installed and started."
+    Write-Host "Installation completed successfully."
 }
 
 function Uninstall-ZrokAgent {
     Assert-AdministratorRoleRequirement
     if(-not (Test-ZrokAgentServiceExists)) {
-        Write-Host "Service zrok-agent is not installed."
+        Write-Host "Service ${SERVICE_NAME} is not installed."
         Exit
     }
 
@@ -144,11 +147,11 @@ function Uninstall-ZrokAgent {
     Write-Host "Disabling the zrok environment..."
     zrok.exe disable
 
-    Write-Host "Stopping the zrok-agent service..."
-    nssm.exe stop zrok-agent
+    Write-Host "Stopping the ${SERVICE_NAME} service..."
+    nssm.exe stop ${SERVICE_NAME}
 
-    Write-Host "Deleting the zrok-agent service..."
-    nssm.exe remove zrok-agent confirm
+    Write-Host "Deleting the ${SERVICE_NAME} service..."
+    nssm.exe remove ${SERVICE_NAME} confirm
 
     Write-Host "Cleaning up the zrok profile..."
     $System32Path = if (-not [Environment]::Is64BitProcess) {
@@ -169,6 +172,8 @@ function Uninstall-ZrokAgent {
     if (-not (Get-ChildItem $SiteManagerDirectory)) {
         Remove-Item -Path $SiteManagerDirectory -Force
     }
+
+    Write-Host "Uninstallation completed successfully."
 }
 
 function Show-Help {
@@ -177,9 +182,9 @@ Usage:
     .\Setup-DataMinerSiteManager.ps1 -Command <install|uninstall|help> -AccountToken <AccountToken> -SiteName <SiteName>
 
 Commands:
-    install     Installs the zrok-agent as a Windows service.
+    install     Installs the ${SERVICE_NAME} as a Windows service.
                 Requires -AccountToken and -SiteName.
-    uninstall   Uninstalls the zrok-agent service and cleans up.
+    uninstall   Uninstalls the ${SERVICE_NAME} service and cleans up.
     help        Shows this help message.
 
 Examples:
