@@ -30,7 +30,7 @@ install_zrok_agent() {
     DESCRIPTION="$2"
     assert_no_placeholder_values "$TOKEN" "$DESCRIPTION"
 
-    if systemctl is-active --quiet "$SERVICE_NAME"; then
+    if systemctl status "$SERVICE_NAME" &>/dev/null; then
         echo "Service already installed."
         exit 0
     fi
@@ -82,7 +82,7 @@ EOF
 
 uninstall_zrok_agent() {
     assert_sudo
-    if ! systemctl is-active --quiet "$SERVICE_NAME"; then
+    if ! systemctl status "$SERVICE_NAME" &>/dev/null; then
         echo "Service ${SERVICE_NAME} is not installed."
         exit 0
     fi
