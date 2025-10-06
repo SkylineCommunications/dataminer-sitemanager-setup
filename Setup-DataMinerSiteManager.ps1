@@ -128,9 +128,8 @@ function Install-ZrokAgent {
     nssm.exe set zrok-agent AppDirectory $script:SystemProfilePath
     nssm.exe set zrok-agent AppStdout "${script:SystemProfilePath}\.zrok\agent-stdout.log"
     nssm.exe set zrok-agent AppStderr "${script:SystemProfilePath}\.zrok\agent-stderr.log"
-
-    sc.exe config zrok-agent start=delayed-auto
-    sc.exe start zrok-agent
+    nssm.exe set zrok-agent Start SERVICE_DELAYED_AUTO_START
+    nssm.exe start zrok-agent
 }
 
 function Uninstall-ZrokAgent {
@@ -146,10 +145,10 @@ function Uninstall-ZrokAgent {
     zrok.exe disable
 
     Write-Host "Stopping the zrok-agent service..."
-    sc.exe stop zrok-agent
+    nssm.exe stop zrok-agent
 
     Write-Host "Deleting the zrok-agent service..."
-    sc.exe delete zrok-agent
+    nssm.exe remove zrok-agent confirm
 
     Write-Host "Cleaning up the zrok profile..."
     $System32Path = if (-not [Environment]::Is64BitProcess) {
