@@ -1,11 +1,11 @@
 param(
     [string]$Command = "help",
-    [string]$ZrokAccountToken,
-    [string]$ZrokEnvironmentDescription
+    [string]$AccountToken,
+    [string]$SiteName
 )
 
-if ($ZrokEnvironmentDescription) {
-    $ZrokEnvironmentDescription = $ZrokEnvironmentDescription.Trim()
+if ($SiteName) {
+    $SiteName = $SiteName.Trim()
 }
 
 $SERVICE_NAME = "zrok-agent"
@@ -39,25 +39,25 @@ function Assert-AdministratorRoleRequirement {
     }
 }
 
-function Assert-ZrokAccountTokenRequirement {
-    if(-not $ZrokAccountToken) {
-        Write-Host "A zrok account token needs to be passed in order to complete the installation."
+function Assert-AccountTokenRequirement {
+    if(-not $AccountToken) {
+        Write-Host "An account token needs to be passed in order to complete the installation."
         Exit
     }
 }
 
-function Assert-ZrokEnvironmentDescriptionRequirement {
-    if(-not $ZrokEnvironmentDescription) {
-        Write-Host "A zrok environment description needs to be passed in order to complete the installation."
+function Assert-SiteNameRequirement {
+    if(-not $SiteName) {
+        Write-Host "A site name needs to be passed in order to complete the installation."
         Exit
     }
 }
 
 function Assert-NoPlaceholderValues {
-    if ($ZrokAccountToken -eq "<token>" -or $ZrokEnvironmentDescription -eq "<description>") {
-        Write-Host "You must replace the placeholder values <token> and <description> with your actual zrok account token and environment description."
+    if ($AccountToken -eq "<AccountToken>" -or $SiteName -eq "<SiteName>") {
+        Write-Host "You must replace the placeholder values <AccountToken> and <SiteName> with your actual account token and site name."
         Write-Host "Example:"
-        Write-Host "    .\Setup-DataMinerSiteManager.ps1 -Command install -ZrokAccountToken 3Yz8gmEPHuvw -ZrokEnvironmentDescription 'Skyline HQ'"
+        Write-Host "    .\Setup-DataMinerSiteManager.ps1 -Command install -AccountToken 3Yz8gmEPHuvw -SiteName 'Skyline HQ'"
         Exit
     }
 }
@@ -69,8 +69,8 @@ function Test-ZrokAgentServiceExists {
 function Install-ZrokAgent {
     Assert-WindowsVersionRequirement
     Assert-AdministratorRoleRequirement
-    Assert-ZrokAccountTokenRequirement
-    Assert-ZrokEnvironmentDescriptionRequirement
+    Assert-AccountTokenRequirement
+    Assert-SiteNameRequirement
     Assert-NoPlaceholderValues
 
     if(Test-ZrokAgentServiceExists) {
@@ -120,7 +120,7 @@ function Install-ZrokAgent {
     }
 
     zrok.exe config set apiEndpoint https://api.zrok.dataminer.services
-    zrok.exe enable $ZrokAccountToken --description $ZrokEnvironmentDescription
+    zrok.exe enable $AccountToken --description $SiteName
 
     Write-Host "Installing the zrok-agent service..."
 
@@ -175,16 +175,16 @@ function Uninstall-ZrokAgent {
 function Show-Help {
     Write-Host @"
 Usage:
-    .\Setup-DataMinerSiteManager.ps1 -Command <install|uninstall|help> -ZrokAccountToken <token> -ZrokEnvironmentDescription <description>
+    .\Setup-DataMinerSiteManager.ps1 -Command <install|uninstall|help> -AccountToken <AccountToken> -SiteName <SiteName>
 
 Commands:
     install     Installs the zrok-agent as a Windows service.
-                Requires -ZrokAccountToken and -ZrokEnvironmentDescription.
+                Requires -AccountToken and -SiteName.
     uninstall   Uninstalls the zrok-agent service and cleans up.
     help        Shows this help message.
 
 Examples:
-    .\Setup-DataMinerSiteManager.ps1 -Command install -ZrokAccountToken 3G67gmYPhaww -ZrokEnvironmentDescription "Skyline HQ"
+    .\Setup-DataMinerSiteManager.ps1 -Command install -AccountToken 3G67gmYPhaww -SiteName "Skyline HQ"
     .\Setup-DataMinerSiteManager.ps1 -Command uninstall
 "@
 }
