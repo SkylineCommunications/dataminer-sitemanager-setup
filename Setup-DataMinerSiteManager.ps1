@@ -26,8 +26,10 @@ function Assert-WindowsVersionRequirement {
 
     if ($Version -lt $MinimumSupportedVersion) {
         Write-Host "Unsupported OS version: $Version. Requires Windows 10 / Windows Server 2019 build 17134 or later."
-        Exit
+        return $false
     }
+
+    return $true
 }
 
 function Assert-AdministratorRoleRequirement {
@@ -35,22 +37,28 @@ function Assert-AdministratorRoleRequirement {
 
     if(-not $IsAdministrator) {
         Write-Host "Setup script needs to run as administrator."
-        Exit
+        return $false
     }
+
+    return $true
 }
 
 function Assert-AccountTokenRequirement {
     if(-not $AccountToken) {
         Write-Host "An account token needs to be passed in order to complete the installation."
-        Exit
+        return $false
     }
-}
+
+    return $true
+}   
 
 function Assert-SiteNameRequirement {
     if(-not $SiteName) {
         Write-Host "A site name needs to be passed in order to complete the installation."
-        Exit
+        return $false
     }
+
+    return $true
 }
 
 function Assert-NoPlaceholderValues {
@@ -58,8 +66,10 @@ function Assert-NoPlaceholderValues {
         Write-Host "You must replace the placeholder values <AccountToken> and <SiteName> with your actual account token and site name."
         Write-Host "Example:"
         Write-Host "    .\Setup-DataMinerSiteManager.ps1 -Command install -AccountToken 3Yz8gmEPHuvw -SiteName 'Skyline HQ'"
-        Exit
+        return $false
     }
+
+    return $true
 }
 
 function Test-ZrokAgentServiceExists {
@@ -67,15 +77,17 @@ function Test-ZrokAgentServiceExists {
 }
 
 function Install-ZrokAgent {
-    Assert-WindowsVersionRequirement
-    Assert-AdministratorRoleRequirement
-    Assert-AccountTokenRequirement
-    Assert-SiteNameRequirement
-    Assert-NoPlaceholderValues
-
+    if (-not (Assert-WindowsVersionRequirement) -or
+    -not (Assert-AdministratorRoleRequirement) -or
+    -not (Assert-AccountTokenRequirement) -or
+    -not (Assert-SiteNameRequirement) -or
+    -not (Assert-NoPlaceholderValues)) {
+        return
+    }
+    
     if(Test-ZrokAgentServiceExists) {
         Write-Host "Service ${SERVICE_NAME} is already installed."
-        Exit
+        return
     }
 
     $ZROK_VERSION = "1.1.5"
@@ -136,10 +148,13 @@ function Install-ZrokAgent {
 }
 
 function Uninstall-ZrokAgent {
-    Assert-AdministratorRoleRequirement
+    if (-not (Assert-AdministratorRoleRequirement)) {
+        return
+    }
+
     if(-not (Test-ZrokAgentServiceExists)) {
         Write-Host "Service ${SERVICE_NAME} is not installed."
-        Exit
+        return
     }
 
     Initialize-ScriptContext
