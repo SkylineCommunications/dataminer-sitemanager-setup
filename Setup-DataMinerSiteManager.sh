@@ -48,7 +48,7 @@ install_zrok_agent() {
     local zrok_download_url="https://github.com/openziti/zrok/releases/download/v${ZROK_VERSION}/${zrok_download_file_name}"
 
     echo "Downloading zrok version ${ZROK_VERSION}..."
-    curl -L -o "$zrok_download_path" --progress-bar "$zrok_download_url"
+    curl -L --fail -o "$zrok_download_path" --progress-bar "$zrok_download_url"
 
     tar -xzf "$zrok_download_path" -C "$download_directory"
 
