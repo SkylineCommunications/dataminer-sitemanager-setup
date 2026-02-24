@@ -103,16 +103,26 @@ function Install-ZrokAgent {
     $ZrokDownloadPath = [System.IO.Path]::Combine($DownloadDirectory, $ZrokDownloadFileName)
     $ZrokDownloadUrl = "https://github.com/openziti/zrok/releases/download/v${ZROK_VERSION}/${ZrokDownloadFileName}"
 
-    Write-Host "Downloading zrok version ${ZROK_VERSION}"...
-    curl.exe -L -o $ZrokDownloadPath --progress-bar $ZrokDownloadUrl
+    Write-Host "Downloading zrok version ${ZROK_VERSION}..."
+    curl.exe -L --fail -o $ZrokDownloadPath --progress-bar $ZrokDownloadUrl
+
+    if ($LASTEXITCODE -ne 0 -or !(Test-Path $ZrokDownloadPath)) {
+        Write-Host "Downloading zrok version ${ZROK_VERSION} failed."
+        return
+    }
 
     $NssmDownloadFileName = "nssm-${NSSM_VERSION}.zip"
     $NssmDownloadPath = [System.IO.Path]::Combine($DownloadDirectory, $NssmDownloadFileName)
     $NssmDownloadUrl = "https://nssm.cc/release/${NssmDownloadFileName}"
 
-    Write-Host "Downloading nssm version ${NSSM_VERSION}"...
-    curl.exe -L -o $NssmDownloadPath --progress-bar $NssmDownloadUrl
+    Write-Host "Downloading nssm version ${NSSM_VERSION}..."
+    curl.exe -L --fail -o $NssmDownloadPath --progress-bar $NssmDownloadUrl
 
+    if ($LASTEXITCODE -ne 0 -or !(Test-Path $NssmDownloadPath)) {
+        Write-Host "Downloading nssm version ${NSSM_VERSION} failed."
+        return
+    }
+   
     tar -xzf $ZrokDownloadPath -C $DownloadDirectory
     Expand-Archive -Path $NssmDownloadPath -DestinationPath $DownloadDirectory -Force
 
