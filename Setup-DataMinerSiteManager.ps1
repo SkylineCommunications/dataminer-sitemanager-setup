@@ -113,7 +113,7 @@ function Install-ZrokAgent {
 
     $NssmDownloadFileName = "nssm-${NSSM_VERSION}.zip"
     $NssmDownloadPath = [System.IO.Path]::Combine($DownloadDirectory, $NssmDownloadFileName)
-    $NssmDownloadUrl = "https://nssm.cc/release/${NssmDownloadFileName}"
+    $NssmDownloadUrl = "https://sitemanagerartifacts.blob.core.windows.net/installers/${NssmDownloadFileName}"
 
     Write-Host "Downloading nssm version ${NSSM_VERSION}..."
     curl.exe -L --fail -o $NssmDownloadPath --progress-bar $NssmDownloadUrl
